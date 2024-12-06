@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /profiles/{profileId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                    .hasOnly(['likes', 'likedBy', 'followers']);
+    }
+    
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                    .hasOnly(['likes', 'likedBy']);
+    }
+    
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                    .hasOnly(['likes', 'likedBy']);
+    }
+
+    match /ranks/{rankId} {
+      allow read: if true;
+      allow create: if true;
+    }
+
+    match /polls/{pollId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                    .hasOnly(['options']);
+    }
+  }
+}
